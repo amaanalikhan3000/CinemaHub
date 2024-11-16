@@ -1,14 +1,13 @@
 package com.CinemaHub.CinemaHub.Services;
 
-import com.CinemaHub.CinemaHub.Entity.MovieShow;
+
 import com.CinemaHub.CinemaHub.Entity.Seat;
 import com.CinemaHub.CinemaHub.Repository.SeatRepo;
 import com.CinemaHub.CinemaHub.Repository.ShowRepo;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Service

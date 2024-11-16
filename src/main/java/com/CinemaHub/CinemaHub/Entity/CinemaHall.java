@@ -1,8 +1,10 @@
 package com.CinemaHub.CinemaHub.Entity;
 
-import jakarta.persistence.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -18,6 +20,9 @@ public class CinemaHall {
     private Cinema cinema;
 
     private String title;
+
+    @Lob // Maps to 'TEXT' in most databases
+    @Column(columnDefinition = "TEXT") // Explicitly specify the column type
     private String description;
 
 }

@@ -36,7 +36,7 @@ public class CinemaHallController {
 //        return new ResponseEntity<>(cinemas, HttpStatus.OK);
 //    }
 
-        @PostMapping
+    @PostMapping
     public ResponseEntity<?> createEntry(@RequestBody CinemaHall CinemaHall) {
 
         try {

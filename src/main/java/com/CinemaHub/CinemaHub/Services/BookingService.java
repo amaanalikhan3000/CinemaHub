@@ -8,9 +8,10 @@ import com.CinemaHub.CinemaHub.Repository.BookingRepo;
 import com.CinemaHub.CinemaHub.Repository.SeatRepo;
 import com.CinemaHub.CinemaHub.Repository.ShowRepo;
 import com.CinemaHub.CinemaHub.Repository.UserRepo;
-import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
 
