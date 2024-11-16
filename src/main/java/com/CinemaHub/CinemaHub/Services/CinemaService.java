@@ -3,10 +3,10 @@ package com.CinemaHub.CinemaHub.Services;
 import com.CinemaHub.CinemaHub.Entity.Cinema;
 import com.CinemaHub.CinemaHub.Exceptions.ResourceNotFoundException;
 import com.CinemaHub.CinemaHub.Repository.CinemaRepo;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 

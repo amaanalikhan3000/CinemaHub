@@ -1,14 +1,18 @@
 package com.CinemaHub.CinemaHub.Entity;
 
-import jakarta.persistence.*;
+
 import lombok.Data;
+
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.*;
 
 @Entity
 @Data
 @Table(name = "seat")
 public class Seat {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "seat_id")
     private Integer seatId;
 
