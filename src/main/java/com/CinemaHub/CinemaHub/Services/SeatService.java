@@ -6,8 +6,8 @@ import com.CinemaHub.CinemaHub.Repository.SeatRepo;
 import com.CinemaHub.CinemaHub.Repository.ShowRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
+import java.util.List;
 
 
 @Service
@@ -21,7 +21,7 @@ public class SeatService {
     private ShowRepo showRepo;
 
 
-    public List<Seat> getUnReservedSeatsForShow(Long showId) {
+    public List<Seat> getUnReservedSeatsForShow(Integer  showId) {
         return seatRepo.findNonReservedSeatsByShowId(showId);  // This uses the native query with LIMIT 5
     }
 
@@ -69,3 +69,6 @@ public class SeatService {
 
 
 }
+
+
+

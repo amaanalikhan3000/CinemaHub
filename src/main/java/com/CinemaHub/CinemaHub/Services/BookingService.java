@@ -34,13 +34,13 @@ public class BookingService {
 
 
 //    @Transactional
-    public String bookSeats(Long userId, Long showId, List<Integer> seatNumbers) {
+    public String bookSeats(Integer userId, Integer showId, List<Integer> seatNumbers) {
 
         List<Seat> seats = seatRepository.findBySeatNoInAndMovieShow_ShowId(seatNumbers, showId);
 
-        Optional<User> userOpt = userRepo.findById(userId);
+        Optional<User> userOpt = userRepo.findById(Long.valueOf(userId));
 
-        Optional<MovieShow> movieShowOpt = showRepo.findById(showId);
+        Optional<MovieShow> movieShowOpt = showRepo.findByShowId(showId);
 
         if (userOpt.isEmpty() || movieShowOpt.isEmpty()) {
             return "Reservation Status - Failed: Invalid user ID or show ID.";

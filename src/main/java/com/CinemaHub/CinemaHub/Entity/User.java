@@ -1,5 +1,6 @@
 package com.CinemaHub.CinemaHub.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,7 @@ public class User {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Booking> bookings;
 
     public User(Long userId) {
