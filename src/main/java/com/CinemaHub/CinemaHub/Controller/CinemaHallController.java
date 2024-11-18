@@ -5,7 +5,6 @@ package com.CinemaHub.CinemaHub.Controller;
 import com.CinemaHub.CinemaHub.Entity.CinemaHall;
 import com.CinemaHub.CinemaHub.Services.CinemaHallService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,7 @@ public class CinemaHallController {
 //        return new ResponseEntity<>(cinemas, HttpStatus.OK);
 //    }
 
-    @PostMapping
+        @PostMapping
     public ResponseEntity<?> createEntry(@RequestBody CinemaHall CinemaHall) {
 
         try {

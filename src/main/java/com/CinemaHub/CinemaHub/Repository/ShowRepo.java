@@ -1,13 +1,11 @@
 package com.CinemaHub.CinemaHub.Repository;
 
 
-
-
+import com.CinemaHub.CinemaHub.Entity.MovieShow;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import com.CinemaHub.CinemaHub.Entity.MovieShow;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,4 +42,7 @@ public interface ShowRepo extends JpaRepository<MovieShow,Long> {
     List<Object[]> findMovieShowDetailsByTitle(@Param("title") String title);
 
 
+    //Optional<MovieShow> findById(Integer showId);
+
+    Optional<MovieShow> findByShowId(Integer showId);
 }

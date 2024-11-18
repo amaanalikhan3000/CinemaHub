@@ -5,14 +5,12 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-import static javax.persistence.GenerationType.*;
-
 @Entity
 @Data
 @Table(name = "seat")
 public class Seat {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seat_id")
     private Integer seatId;
 
@@ -35,3 +33,5 @@ public class Seat {
 
 
 }
+
+

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RequestMapping("/seats")
 @RestController
 public class SeatController {
@@ -23,8 +24,10 @@ public class SeatController {
 //        return seatService.getUnReservedSeatsForShow(showId);
 //    }
 
+
     @GetMapping("/unreserved/{showId}")
-    public  ResponseEntity <List<Seat>>getUnReservedSeats(@PathVariable Long showId) {
+    public  ResponseEntity <List<Seat>>getUnReservedSeats(@PathVariable Integer  showId) {
+        System.out.println("Type of showId: " + showId.getClass().getName());
         List<Seat> s = seatService.getUnReservedSeatsForShow(showId);
         // HOUSEFULL
         if (s.isEmpty() || s.size()==0 ){
@@ -43,11 +46,5 @@ public class SeatController {
     public void reserveSeats2(@RequestBody ReservationRequest request) {
         seatService.reserveSeats2(request.getSeatNos(), request.getShowIds());
     }
-
-
-
-
-
-
 
 }

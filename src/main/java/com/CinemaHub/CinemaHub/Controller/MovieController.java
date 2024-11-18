@@ -6,6 +6,8 @@ import com.CinemaHub.CinemaHub.Services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +34,9 @@ public class MovieController {
     // finding by Id
     @GetMapping("/movieId/{movieId}")
     public ResponseEntity<?> getEntryById(@PathVariable Integer movieId) {
+
+ /*    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String UserName = authentication.getName();  */
         Optional<Movie> f = movieService.findById(movieId);
 
         if (f.isPresent()) {

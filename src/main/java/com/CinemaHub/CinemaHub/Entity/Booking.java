@@ -1,7 +1,9 @@
 package com.CinemaHub.CinemaHub.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "booking_id") // Use this if your database has booking_id as the primary key
+    @Column(name = "booking_id")
     private Long bookingId;
 
     @ManyToOne
@@ -20,6 +22,7 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToMany
