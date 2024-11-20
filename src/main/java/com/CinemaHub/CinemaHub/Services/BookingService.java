@@ -32,8 +32,7 @@ public class BookingService {
     private ShowRepo showRepo;
 
 
-
-//    @Transactional
+    //    @Transactional
     public String bookSeats(Integer userId, Integer showId, List<Integer> seatNumbers) {
 
         List<Seat> seats = seatRepository.findBySeatNoInAndMovieShow_ShowId(seatNumbers, showId);
@@ -50,9 +49,6 @@ public class BookingService {
             return "Reservation Status - Failed: Some seats are unavailable or do not exist.";
         }
 
-        if (seats.size() != seatNumbers.size()) {
-            return "Reservation Status - Failed: Some seats are unavailable or do not exist.";
-        }
 
         // Ensure no seat is reserved
         for (Seat seat : seats) {
@@ -78,7 +74,5 @@ public class BookingService {
         }
     }
 
-
-    //
 
 }

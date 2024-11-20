@@ -38,6 +38,12 @@ public class UserService {
         userRepo.save(user);
     }
 
+    public void saveNewAdminUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Arrays.asList("ADMIN"));
+        userRepo.save(user);
+    }
+
 //    public void saveNewUser(User user) {
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
 //        userRepo.save(user);
@@ -48,6 +54,8 @@ public class UserService {
     }
 
 
+
+
     public Optional<User> findById(Long id) {
         return userRepo.findById(id);
     }
@@ -56,6 +64,7 @@ public class UserService {
     public void deleteById(Long id) {
         userRepo.deleteById(id);
     }
+
 
 
 }

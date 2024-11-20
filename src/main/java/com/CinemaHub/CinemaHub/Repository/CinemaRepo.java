@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface CinemaRepo extends JpaRepository<Cinema,Long> {
+public interface CinemaRepo extends JpaRepository<Cinema,Integer> {
   /*  Optional<Cinema> findByName(String name);
     List<Cinema> findByLocation(String location);
    */

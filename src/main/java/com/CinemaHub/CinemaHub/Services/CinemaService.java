@@ -57,7 +57,7 @@ public class CinemaService {
 
     // Get Cinema by ID
     public Optional<Cinema> getCinemaById(Long id) {
-        return cinemaRepository.findById(id);
+        return cinemaRepository.findById(Math.toIntExact(id));
     }
 
     // Delete Cinema by ID
@@ -65,12 +65,18 @@ public class CinemaService {
 //        cinemaRepository.deleteById(id);
 //    }
 
-    @Transactional
-    public void deleteCinema(Long cinemaId) {
-        Cinema cinema = cinemaRepository.findById(cinemaId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cinema not found"));
+
+    //@Transactional
+//    public void deleteById(Integer cinemaId) {
+//        Cinema cinema = cinemaRepository.findById(cinemaId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Cinema not found"));
+//        cinemaRepository.deleteById(cinemaId);
+//        cinemaRepository.delete(cinema);
+//    }
+
+
+    public void deleteById(Integer cinemaId){
         cinemaRepository.deleteById(cinemaId);
-        cinemaRepository.delete(cinema);
     }
 }
 
