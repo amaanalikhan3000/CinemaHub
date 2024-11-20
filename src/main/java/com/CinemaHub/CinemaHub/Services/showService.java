@@ -22,7 +22,7 @@ public class showService {
     @Autowired
     private ShowRepo showRepo;
 
-    public Optional<MovieShow> getShowsByMovieId(Long movieId) {
+    public Optional<MovieShow> getShowsByMovieId(Integer movieId) {
         return showRepo.findById(movieId);
     }
 

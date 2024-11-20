@@ -27,7 +27,7 @@ public class SeatController {
 
     @GetMapping("/unreserved/{showId}")
     public  ResponseEntity <List<Seat>>getUnReservedSeats(@PathVariable Integer  showId) {
-        System.out.println("Type of showId: " + showId.getClass().getName());
+
         List<Seat> s = seatService.getUnReservedSeatsForShow(showId);
         // HOUSEFULL
         if (s.isEmpty() || s.size()==0 ){
