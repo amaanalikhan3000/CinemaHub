@@ -15,12 +15,12 @@ public class Oauth2 {
 
     @Autowired
     private UserService userService;
-
+    // otp
     @PostMapping("/createAdmin")
     public void createAdminUser(@RequestBody User user) {
         userService.saveNewAdminUser(user);
     }
-
+    // otp
     @PostMapping("/createUser")
     public void createUserUser(@RequestBody User user) {
         userService.saveNewUser(user);

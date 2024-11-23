@@ -5,10 +5,7 @@ import com.CinemaHub.CinemaHub.Entity.CinemaHall;
 import com.CinemaHub.CinemaHub.Entity.Movie;
 import com.CinemaHub.CinemaHub.Entity.User;
 import com.CinemaHub.CinemaHub.Repository.UserRepo;
-import com.CinemaHub.CinemaHub.Services.CinemaHallService;
-import com.CinemaHub.CinemaHub.Services.CinemaService;
-import com.CinemaHub.CinemaHub.Services.MovieService;
-import com.CinemaHub.CinemaHub.Services.UserService;
+import com.CinemaHub.CinemaHub.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +31,9 @@ public class Admin {
 
     @Autowired
     private UserService userService;
+
+
+
 
     @PostMapping("/movie")
     public ResponseEntity<?> createEntry(@RequestBody Movie movie) {
@@ -113,7 +113,7 @@ public class Admin {
         return new ResponseEntity<>("Error message", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
+// OTP
     @PostMapping("/create-user")
     public void createAdminUser(@RequestBody User user) {
         userService.saveNewAdminUser(user);

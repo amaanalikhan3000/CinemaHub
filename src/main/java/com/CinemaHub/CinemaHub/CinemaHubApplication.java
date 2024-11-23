@@ -8,13 +8,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @SpringBootApplication
 @EnableWebSecurity
 @EnableAutoConfiguration
-
 public class CinemaHubApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CinemaHubApplication.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(CinemaHubApplication.class, args);
 
 
-	}
+    }
 
 }
