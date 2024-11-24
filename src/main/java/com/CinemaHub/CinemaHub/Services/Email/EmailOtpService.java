@@ -1,5 +1,6 @@
-package com.CinemaHub.CinemaHub.Services;
+package com.CinemaHub.CinemaHub.Services.Email;
 
+import com.CinemaHub.CinemaHub.Services.OtpStorageService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;

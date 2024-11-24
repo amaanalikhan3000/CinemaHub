@@ -1,20 +1,26 @@
 package com.CinemaHub.CinemaHub.Controller2.User;
 
+
 import com.CinemaHub.CinemaHub.DTO.MovieShowDetailsDTO;
 import com.CinemaHub.CinemaHub.DTO.ReservationRequest;
+import com.CinemaHub.CinemaHub.Entity.Booking;
 import com.CinemaHub.CinemaHub.Entity.MovieShow;
 import com.CinemaHub.CinemaHub.Entity.Seat;
 import com.CinemaHub.CinemaHub.Repository.UserRepo;
-import com.CinemaHub.CinemaHub.Services.*;
+import com.CinemaHub.CinemaHub.Services.BookingService;
+import com.CinemaHub.CinemaHub.Services.Email.BookingEmail;
+import com.CinemaHub.CinemaHub.Services.SeatService;
+import com.CinemaHub.CinemaHub.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/user")
@@ -40,30 +46,36 @@ public class User {
     @Autowired
     private SeatService seatService;
 
+    @Autowired
+    private BookingEmail bookingEmail;
 
 
     @GetMapping("/unreserved/{showId}")
-    public  ResponseEntity <List<Seat>>getUnReservedSeats(@PathVariable Integer  showId) {
+    public ResponseEntity<List<Seat>> getUnReservedSeats(@PathVariable Integer showId) {
 
         List<Seat> s = seatService.getUnReservedSeatsForShow(showId);
         // HOUSEFULL
-        if (s.isEmpty() || s.size()==0 ){
+        if (s.isEmpty() || s.size() == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             return new ResponseEntity<>(s, HttpStatus.OK);
         }
     }
 
 
-
     @PostMapping("/reserve")
     public ResponseEntity<?> reserveSeats(@RequestBody ReservationRequest request) {
+        ResponseEntity<?> result;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String UserName = authentication.getName();
 
 
         com.CinemaHub.CinemaHub.Entity.User user = userService.findByUserName(UserName);
+
+        List<Booking> bookings = user.getBookings();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 
         boolean equals = user.getId().equals(request.getUserId().longValue());
@@ -72,12 +84,34 @@ public class User {
         if (equals) {
             String message = bookingService.bookSeats(request.getUserId(), request.getShowId(), request.getSeatNos());
             HttpStatus status = message.contains("Failed") ? HttpStatus.CONFLICT : HttpStatus.OK;
-            return new ResponseEntity<>(message, status);
+            if (status == HttpStatus.OK) {
+                System.out.println("BOOKED");
+
+                for (Booking booking : bookings) {
+                    Long bookingId = booking.getBookingId(); // Get Booking ID
+                    MovieShow movieShow = booking.getMovieShow(); // Get MovieShow object
+
+                    // Extract Movie name
+                    String movieName = movieShow.getMovie().getTitle();
+
+                    // Extract Show timings
+                    String startTime = movieShow.getStartTime().format(formatter);
+                    String endTime = movieShow.getEndTime().format(formatter);
+
+                    String theaterLocation = movieShow.getCinemaHall().getCinema().getLocation();
+                    String cinemaHallName = movieShow.getCinemaHall().getTitle();
+
+                    bookingEmail.sendEmail(user.getUsername(), user.getEmail(), request.getSeatNos(), movieName, startTime, endTime, bookingId, theaterLocation, cinemaHallName);
+                }
+
+            }
+            result = new ResponseEntity<>(message, status);
+        } else {
+            result = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-
+        return result;
     }
 
 
@@ -101,16 +135,16 @@ public class User {
         String UserName = authentication.getName();
         com.CinemaHub.CinemaHub.Entity.User userIndb = userService.findByUserName(UserName);
 
-        if(userIndb!=null){
-            userIndb.setEmail(newUser.getEmail()!=null && !newUser.getEmail().equals("")? newUser.getEmail() : userIndb.getEmail());
-            userIndb.setUsername(newUser.getUsername()!=null && !newUser.getUsername().equals("")? newUser.getUsername() : userIndb.getUsername());
+        if (userIndb != null) {
+            userIndb.setEmail(newUser.getEmail() != null && !newUser.getEmail().equals("") ? newUser.getEmail() : userIndb.getEmail());
+            userIndb.setUsername(newUser.getUsername() != null && !newUser.getUsername().equals("") ? newUser.getUsername() : userIndb.getUsername());
             userIndb.setPassword(newUser.getPassword() != null && !newUser.getPassword().equals("") ? newUser.getPassword() : userIndb.getPassword());
             userIndb.setPhoneNumber(newUser.getPhoneNumber() != null && !newUser.getPhoneNumber().equals("") ? newUser.getPhoneNumber() : userIndb.getPhoneNumber());
             userIndb.setBookings(newUser.getBookings() != null && !newUser.getBookings().isEmpty() ? newUser.getBookings() : userIndb.getBookings());
 
-            if(userIndb.getRoles().equals("USER")){
+            if (userIndb.getRoles().equals("USER")) {
                 userService.saveNewUser(userIndb);
-            }else{
+            } else {
                 userService.saveNewAdminUser(userIndb);
             }
 
@@ -118,7 +152,6 @@ public class User {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 
 
     @DeleteMapping("/deleteUserById")
@@ -134,9 +167,6 @@ public class User {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
-
 
 
 }
