@@ -45,4 +45,6 @@ public interface ShowRepo extends JpaRepository<MovieShow,Integer> {
     //Optional<MovieShow> findById(Integer showId);
 
     Optional<MovieShow> findByShowId(Integer showId);
+
+
 }
