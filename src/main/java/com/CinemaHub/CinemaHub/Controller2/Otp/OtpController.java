@@ -1,7 +1,9 @@
 package com.CinemaHub.CinemaHub.Controller2.Otp;
 
+
+
 import com.CinemaHub.CinemaHub.Entity.OtpDetails;
-import com.CinemaHub.CinemaHub.Services.EmailOtpService;
+import com.CinemaHub.CinemaHub.Services.Email.EmailOtpService;
 import com.CinemaHub.CinemaHub.Services.OtpStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -9,7 +9,10 @@ import com.CinemaHub.CinemaHub.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +34,6 @@ public class Admin {
 
     @Autowired
     private UserService userService;
-
-
 
 
     @PostMapping("/movie")
@@ -113,11 +114,34 @@ public class Admin {
         return new ResponseEntity<>("Error message", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-// OTP
+    // OTP
     @PostMapping("/create-user")
     public void createAdminUser(@RequestBody User user) {
         userService.saveNewAdminUser(user);
     }
 
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> getEntryById(@PathVariable Long id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String UserName = authentication.getName();
+
+        User user = userService.findByUserName(UserName);
+
+        boolean equals = user.getId().equals(id);
+
+
+        if (equals) {
+            Optional<User> f = userService.findById(id);
+
+            if (f.isPresent()) {
+                return new ResponseEntity<>(f, HttpStatus.OK);
+            }
+        }
+
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
 }
