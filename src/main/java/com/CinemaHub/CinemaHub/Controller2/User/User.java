@@ -6,6 +6,7 @@ import com.CinemaHub.CinemaHub.DTO.ReservationRequest;
 import com.CinemaHub.CinemaHub.Entity.Booking;
 import com.CinemaHub.CinemaHub.Entity.MovieShow;
 import com.CinemaHub.CinemaHub.Entity.Seat;
+import com.CinemaHub.CinemaHub.Repository.BookingRepo;
 import com.CinemaHub.CinemaHub.Repository.UserRepo;
 import com.CinemaHub.CinemaHub.Services.BookingService;
 import com.CinemaHub.CinemaHub.Services.Email.BookingEmail;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,9 @@ public class User {
     @Autowired
     private BookingEmail bookingEmail;
 
+    @Autowired
+    private BookingRepo bookingRepo;
+
 
     @GetMapping("/unreserved/{showId}")
     public ResponseEntity<List<Seat>> getUnReservedSeats(@PathVariable Integer showId) {
@@ -62,7 +67,7 @@ public class User {
         }
     }
 
-
+    @Transactional
     @PostMapping("/reserve")
     public ResponseEntity<?> reserveSeats(@RequestBody ReservationRequest request) {
         ResponseEntity<?> result;
@@ -80,6 +85,7 @@ public class User {
 
         boolean equals = user.getId().equals(request.getUserId().longValue());
 
+        boolean emailSent = false;
 
         if (equals) {
             String message = bookingService.bookSeats(request.getUserId(), request.getShowId(), request.getSeatNos());
@@ -88,22 +94,24 @@ public class User {
                 System.out.println("BOOKED");
 
                 for (Booking booking : bookings) {
-                    Long bookingId = booking.getBookingId(); // Get Booking ID
-                    MovieShow movieShow = booking.getMovieShow(); // Get MovieShow object
+                    if (!emailSent) {
+                        Long bookingId = booking.getBookingId(); // Get Booking ID
+                        MovieShow movieShow = booking.getMovieShow(); // Get MovieShow object
 
-                    // Extract Movie name
-                    String movieName = movieShow.getMovie().getTitle();
+                        // Extract Movie name
+                        String movieName = movieShow.getMovie().getTitle();
 
-                    // Extract Show timings
-                    String startTime = movieShow.getStartTime().format(formatter);
-                    String endTime = movieShow.getEndTime().format(formatter);
+                        // Extract Show timings
+                        String startTime = movieShow.getStartTime().format(formatter);
+                        String endTime = movieShow.getEndTime().format(formatter);
 
-                    String theaterLocation = movieShow.getCinemaHall().getCinema().getLocation();
-                    String cinemaHallName = movieShow.getCinemaHall().getTitle();
+                        String theaterLocation = movieShow.getCinemaHall().getCinema().getLocation();
+                        String cinemaHallName = movieShow.getCinemaHall().getTitle();
 
-                    bookingEmail.sendEmail(user.getUsername(), user.getEmail(), request.getSeatNos(), movieName, startTime, endTime, bookingId, theaterLocation, cinemaHallName);
+                        bookingEmail.sendEmail(user.getUsername(), user.getEmail(), request.getSeatNos(), movieName, startTime, endTime, bookingId, theaterLocation, cinemaHallName);
+                        emailSent = true;
+                    }
                 }
-
             }
             result = new ResponseEntity<>(message, status);
         } else {
