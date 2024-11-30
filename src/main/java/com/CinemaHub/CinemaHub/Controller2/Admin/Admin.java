@@ -11,9 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -37,22 +43,36 @@ public class Admin {
 
 
     @PostMapping("/movie")
-    public ResponseEntity<?> createEntry(@RequestBody Movie movie) {
+    public ResponseEntity<?> createEntry(@Valid @RequestBody Movie movie) {
 
         try {
+            if (movie.getCountry() == null || movie.getCountry().isEmpty()) {
+                movie.setCountry("Unknown"); // Default value for country
+            }
+            if (movie.getGenre() == null || movie.getGenre().isEmpty()) {
+                movie.setGenre("Not Specified"); // Default value for genre
+            }
             movieService.saveEntry(movie);
             return new ResponseEntity<>(movie, HttpStatus.OK);
-
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("movieId/{movieId}")
-    public ResponseEntity<?> DeleteById(@PathVariable Integer movieId) {
-        movieService.deleteById(movieId);
-        return new ResponseEntity<>(movieService, HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> DeleteById(@PathVariable Integer movieId) {
+        try{
+            if(movieService.findById(movieId).isEmpty()){
+                return new ResponseEntity<>("Movie Not found", HttpStatus.NOT_FOUND);
+            }else{
+                movieService.deleteById(movieId);
+                return new ResponseEntity<>("Movie Deleted Successfully", HttpStatus.NO_CONTENT);
+            }
+
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PutMapping("movieId/{movieId}")
@@ -131,7 +151,6 @@ public class Admin {
 
         boolean equals = user.getId().equals(id);
 
-
         if (equals) {
             Optional<User> f = userService.findById(id);
 
@@ -142,6 +161,35 @@ public class Admin {
 
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errorMessages = new HashMap<>();
+
+
+        BindingResult result = ex.getBindingResult();
+
+        // Iterate through all the validation errors
+        for (FieldError error : result.getFieldErrors()) {
+            // Customize the error messages for the fields
+            if ("title".equals(error.getField())) {
+                errorMessages.put("title", "Title is required and cannot be blank");
+            } else if ("durationInMin".equals(error.getField())) {
+                errorMessages.put("durationInMin", "Duration must be at least 1 minute");
+            } else if ("language".equals(error.getField())) {
+                errorMessages.put("language", "Language is required and cannot be blank");
+            } else if ("releaseDate".equals(error.getField())) {
+                errorMessages.put("releaseDate", "Release date cannot be in the future");
+            }
+        }
+
+        return errorMessages;
     }
 
 }
