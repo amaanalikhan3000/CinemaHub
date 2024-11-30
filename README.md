@@ -1,12 +1,12 @@
 
-## Updated Controllers & fixed bugs.
+## Updated Controllers & Added validation using Spring Boot Validation
 
 ## Endpoints
 
 ### 1. **Create Movie Entry**
 
 **Endpoint**: `POST /movie`  
-**Description**: Added default values and validation using Spring Boot Validation
+**Description**: Allows users to create a movie with fields like title, genre, duration, language, release date, etc. Defaults are applied for optional fields.
 
 #### Request Body Example:
 ```json
