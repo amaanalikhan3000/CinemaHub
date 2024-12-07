@@ -57,6 +57,41 @@
 
 ---
 
+### 3. **updateById**
+
+**Endpoint**: `PUT /movieId/{movieId}`  
+**Description**: This endpoint allows you to update a movie entry based on the movie's ID. Checked for a condition if movieId doesn't exist in database
+
+#### Path Variable:
+- `movieId`: The ID of the movie to delete.
+
+#### Valid Scenarios:
+- **Successfully updating a movie with valid changes.**:
+    - **Expected status code**: `200 OK`
+    - **Expected data**: The updated Movie object with the changes reflected.
+
+
+- **Updating a movie with some optional fields, leaving others unchanged.**:
+    - **Expected status code**: `200 OK`
+    - **Expected data**: The updated Movie object, with updated fields and unchanged fields.
+
+
+#### Error Cases:
+- **Movie ID not found** (trying to update a movie that doesn't exist):
+    - **Expected status code**: `404 Not Found`
+    - **Expected data**: An error message like "Movie Not Found."
+
+
+- **Invalid data in the request body (e.g., invalid genre or duration).**:
+    - **Expected status code**: `400 Bad Request`
+    - **Expected data**: "An error message explaining which fields are invalid."
+
+- **Server failure during deletion**:
+    - **Expected status code**: `500 Internal Server Error`
+    - **Expected data**: An error message explaining the issue.
+
+---
+
 ## Error Handling
 
 ### 1. **Method Argument Validation Exceptions**
@@ -83,19 +118,6 @@ In case of an internal server error (e.g., database issues), the system will ret
 
 ---
 
-## How It Works
-
-1. **Movie Creation**:
-   - The `POST /movie` endpoint validates the movie data and assigns default values to missing optional fields (`country` and `genre`).
-   - The `@Valid` annotation ensures required fields are present and custom error messages are returned for missing or invalid fields using the `@ExceptionHandler` for `MethodArgumentNotValidException`.
-
-2. **Movie Deletion**:
-   - The `DELETE /movieId/{movieId}` endpoint deletes the movie based on the provided `movieId`. If the movie with the given ID doesn't exist, it returns a `404 Not Found`. If a server-side issue occurs, it returns a `500 Internal Server Error`.
-
-3. **Global Exception Handling**:
-   - The `@ControllerAdvice` handles any validation errors globally and returns customized error messages based on field validation failures.
-
----
 
 ## Dependencies
 
