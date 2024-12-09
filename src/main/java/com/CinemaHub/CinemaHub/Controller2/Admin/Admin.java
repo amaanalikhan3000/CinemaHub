@@ -15,9 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.*;
-
 
 
 @RestController
@@ -155,9 +155,41 @@ public class Admin {
 
 
     @PostMapping("/cinema")
-    public ResponseEntity<Cinema> createOrUpdateCinema(@RequestBody Cinema cinema) {
-        Cinema savedCinema = cinemaService.saveCinema(cinema);
-        return new ResponseEntity<>(savedCinema, HttpStatus.CREATED);
+    public ResponseEntity<?> createOrUpdateCinema(@RequestBody Cinema cinema) {
+        try {
+
+            StringBuilder errorMessage = new StringBuilder("Invalid fields: ");
+            boolean isInvalid = false;
+
+            if (cinema.getName() == null || cinema.getName().isBlank()) {
+                errorMessage.append("Name, ");
+                isInvalid = true;
+            }
+
+            if (cinema.getLocation() == null || cinema.getLocation().isBlank()) {
+                errorMessage.append("Location, ");
+                isInvalid = true;
+            }
+
+            Integer TotalCinemaHalls = cinema.getTotalCinemaHalls();
+            if (TotalCinemaHalls == null || TotalCinemaHalls <= 0) {
+                errorMessage.append("TotalCinemaHalls, ");
+                isInvalid = true;
+            }
+
+            if (isInvalid) {
+                // Remove the last comma and space
+                errorMessage.setLength(errorMessage.length() - 2);
+                return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+            }
+
+
+            Cinema savedCinema = cinemaService.saveCinema(cinema);
+            return new ResponseEntity<>(savedCinema, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 
