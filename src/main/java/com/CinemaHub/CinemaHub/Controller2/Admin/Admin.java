@@ -158,6 +158,8 @@ public class Admin {
     public ResponseEntity<?> createOrUpdateCinema(@RequestBody Cinema cinema) {
         try {
 
+
+
             StringBuilder errorMessage = new StringBuilder("Invalid fields: ");
             boolean isInvalid = false;
 
