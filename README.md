@@ -1,5 +1,4 @@
 
-<<<<<<< ErrorCases
 ## Updated Controllers & fixed bugs.
 
 ## Endpoints
