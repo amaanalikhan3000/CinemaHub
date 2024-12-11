@@ -92,6 +92,24 @@
 
 ---
 
+### 4. **createOrUpdateCinema**
+
+**Endpoint**: `POST /cinema`  
+#### Valid Scenarios:
+- **Creating or updating a cinema with valid data.**:
+    - **Expected status code**: `200 OK`
+    - **Expected data**:The created/updated Cinema object.
+#### Error Cases:
+- **Invalid cinema data** (missing required fields like name or location:
+    - **Expected status code**: `404 Not Found`
+    - **Expected data**: An error message detailing missing or invalid fields"
+- **Server failure during deletion**:
+    - **Expected status code**: `500 Internal Server Error`
+    - **Expected data**: An error message explaining the issue.
+
+
+
+
 ## Error Handling
 
 ### 1. **Method Argument Validation Exceptions**
