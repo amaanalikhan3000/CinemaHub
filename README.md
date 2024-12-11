@@ -107,7 +107,7 @@
     - **Expected status code**: `500 Internal Server Error`
     - **Expected data**: An error message explaining the issue.
 
-### **`DELETE /cinemaId/{cinemaId}` (DeleteById2)**
+### 5. **DeleteById2**
 - **Valid Scenarios:**
     - Successfully deleting a cinema.
         - **Expected status code:** `204 No Content`
