@@ -1,6 +1,7 @@
 package com.CinemaHub.CinemaHub.Services;
 
 import com.CinemaHub.CinemaHub.Entity.Cinema;
+import com.CinemaHub.CinemaHub.Entity.Movie;
 import com.CinemaHub.CinemaHub.Exceptions.ResourceNotFoundException;
 import com.CinemaHub.CinemaHub.Repository.CinemaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -78,6 +80,11 @@ public class CinemaService {
     public void deleteById(Integer cinemaId){
         cinemaRepository.deleteById(cinemaId);
     }
+
+    public Optional<Cinema> findById(Integer id){
+        return cinemaRepository.findById(id);
+    }
+
 }
 
 

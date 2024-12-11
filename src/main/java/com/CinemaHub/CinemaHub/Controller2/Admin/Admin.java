@@ -157,9 +157,6 @@ public class Admin {
     @PostMapping("/cinema")
     public ResponseEntity<?> createOrUpdateCinema(@RequestBody Cinema cinema) {
         try {
-
-
-
             StringBuilder errorMessage = new StringBuilder("Invalid fields: ");
             boolean isInvalid = false;
 
@@ -197,8 +194,17 @@ public class Admin {
 
     @DeleteMapping("/cinemaId/{cinemaId}")
     public ResponseEntity<?> DeleteById2(@PathVariable Integer cinemaId) {
-        cinemaService.deleteById(cinemaId);
-        return new ResponseEntity<>(cinemaService, HttpStatus.NO_CONTENT);
+        try {
+            if (cinemaService.findById(cinemaId).isEmpty()) {
+                return new ResponseEntity<>("Cinema Not found", HttpStatus.NOT_FOUND);
+            } else {
+                cinemaService.deleteById(cinemaId);
+                return new ResponseEntity<>("Cinema Deleted Successfully", HttpStatus.NO_CONTENT);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 
