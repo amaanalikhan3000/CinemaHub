@@ -212,11 +212,40 @@ public class Admin {
     public ResponseEntity<?> createEntry(@RequestBody CinemaHall CinemaHall) {
 
         try {
+
+            StringBuilder errorMessage = new StringBuilder("Invalid fields: ");
+            boolean isInvalid = false;
+
+            if (CinemaHall.getCinema() == null) {
+                errorMessage.append("Cinema, ");
+                isInvalid = true;
+            }
+
+            if (CinemaHall.getTitle() == null) {
+                errorMessage.append("Title, ");
+                isInvalid = true;
+            }
+
+            if (CinemaHall.getDescription()==null || CinemaHall.getDescription().isBlank()) {
+                errorMessage.append("Description, ");
+                isInvalid = true;
+            }
+            if (CinemaHall.getHallId() == null || CinemaHall.getHallId() <= 0) {
+                errorMessage.append("HallId, ");
+                isInvalid = true;
+            }
+
+            if (isInvalid) {
+                // Remove the last comma and space
+                errorMessage.setLength(errorMessage.length() - 2);
+                return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+            }
+
             cinemaHallService.saveEntry(CinemaHall);
             return new ResponseEntity<>(CinemaHall, HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
