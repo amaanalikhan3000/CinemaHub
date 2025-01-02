@@ -1,5 +1,5 @@
 
-<<<<<<< ErrorCases
+
 ## Updated Controllers & fixed bugs.
 
 ## Endpoints
@@ -200,7 +200,4 @@ Feel free to fork the project and submit pull requests for any improvements or b
 ## License
 
 This project is licensed under the MIT License.
-=======
->>>>>>> master
-=======
->>>>>>> master
+
