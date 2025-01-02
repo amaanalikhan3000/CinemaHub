@@ -332,7 +332,6 @@ public class Admin {
                 Optional<User> f = userService.findById(id);
                 return new ResponseEntity<>(f, HttpStatus.OK);
             } else {
-                //return new ResponseEntity<>("You do not have permission to access this user.", HttpStatus.FORBIDDEN);
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
