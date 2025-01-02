@@ -201,7 +201,7 @@ public class Admin {
                 cinemaService.deleteById(cinemaId);
                 return new ResponseEntity<>("Cinema Deleted Successfully", HttpStatus.NO_CONTENT);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -226,7 +226,7 @@ public class Admin {
                 isInvalid = true;
             }
 
-            if (CinemaHall.getDescription()==null || CinemaHall.getDescription().isBlank()) {
+            if (CinemaHall.getDescription() == null || CinemaHall.getDescription().isBlank()) {
                 errorMessage.append("Description, ");
                 isInvalid = true;
             }
@@ -252,43 +252,93 @@ public class Admin {
 
     @GetMapping("/user")
     public ResponseEntity<?> getAllUser() {
-        // return userService.getAll();
-
         List<User> all = userService.getAll();
-        if (all != null && !all.isEmpty()) {
-            return new ResponseEntity<>(all, HttpStatus.OK);
-            //return new ResponseEntity<>("OK", HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            if (all != null && !all.isEmpty()) {
+                return new ResponseEntity<>(all, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("No users found.", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("Error message", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // OTP
     @PostMapping("/create-user")
-    public void createAdminUser(@RequestBody User user) {
-        userService.saveNewAdminUser(user);
+    public ResponseEntity<?> createAdminUser(@RequestBody User user) {
+
+        try {
+
+            StringBuilder errorMessage = new StringBuilder("Missing required fields");
+            boolean isInvalid = false;
+
+            if (user.getUsername() == null) {
+                errorMessage.append("userName, ");
+                isInvalid = true;
+            }
+
+            if (user.getPassword() == null) {
+                errorMessage.append("Password, ");
+                isInvalid = true;
+            }
+
+            if (user.getEmail() == null) {
+                errorMessage.append("Email, ");
+                isInvalid = true;
+            }
+
+            if (user.getPhoneNumber() == null) {
+                errorMessage.append("phoneNumber, ");
+                isInvalid = true;
+            }
+
+            if (user.getRoles() == null) {
+                errorMessage.append("Role, ");
+                isInvalid = true;
+            }
+
+
+            if (isInvalid) {
+                // Remove the last comma and space
+                errorMessage.setLength(errorMessage.length() - 2);
+                return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+
+            }
+
+            userService.saveNewAdminUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 
 
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getEntryById(@PathVariable Long id) {
+        try {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String UserName = authentication.getName();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String UserName = authentication.getName();
 
-        User user = userService.findByUserName(UserName);
+            User user = userService.findByUserName(UserName);
 
-        boolean equals = user.getId().equals(id);
+            boolean equals = user.getId().equals(id);
 
-        if (equals) {
-            Optional<User> f = userService.findById(id);
-
-            if (f.isPresent()) {
+            if (equals) {
+                Optional<User> f = userService.findById(id);
                 return new ResponseEntity<>(f, HttpStatus.OK);
+            } else {
+                //return new ResponseEntity<>("You do not have permission to access this user.", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
             }
+        } catch (Exception e) {
+            return new ResponseEntity<>("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
@@ -298,7 +348,6 @@ public class Admin {
         Map<String, String> errorMessages = new HashMap<>();
         BindingResult result = ex.getBindingResult();
 
-        // Iterate through validation errors and map field-specific messages
         for (FieldError error : result.getFieldErrors()) {
             errorMessages.put(error.getField(), error.getDefaultMessage());
         }
