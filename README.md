@@ -135,6 +135,59 @@
         - **Expected data:** An error message like "Internal Server Error."
 
 
+### 7. **getAllUser**
+- **Valid Scenarios:**
+    - Successfully retrieving a list of all users.
+        - **Expected status code:** `200 OK`
+        - **Expected data:** A list of User objects.
+- **Error Cases:**
+    - No users found (e.g., empty list of users).
+        - **Expected status code:** `400 Not Found`
+        - **Expected data:** An error message like "Missing required fields."
+    - Server failure during the deletion process.
+        - **Expected status code:** `500 Internal Server Error`
+        - **Expected data:** An error message like "Internal Server Error."
+
+
+### 8. **createAdminUser**
+- **Valid Scenarios:**
+    - Successfully creating a new admin user with valid data.
+        - **Expected status code:** `200 OK`
+        - **Expected data:** A message like "User created successfully."
+- **Error Cases:**
+    - Invalid user data (e.g., missing required fields).
+        - **Expected status code:** `400 Bad Request`
+        - **Expected data:** An error message like "Missing required fields."
+    - Server failure during the deletion process.
+        - **Expected status code:** `500 Internal Server Error`
+        - **Expected data:** An error message like "Internal Server Error."
+
+
+### 9. **getEntryById**
+- **Valid Scenarios:**
+    - Successfully retrieving a user entry by ID, and the logged-in user matches the requested user.
+        - **Expected status code:** `200 OK`
+        - **Expected data:** The User object with the requested ID".
+- **Error Cases:**
+    - User ID not found.
+        - **Expected status code:** `400  Not Found`
+    - The logged-in user does not have permission to access the requested user’s details.
+        - **Expected status code:** `403 Forbidden`
+        - **Expected data:** An error message like "You do not have permission to access this user."
+    - Server failure during the deletion process.
+        - **Expected status code:** `500 Internal Server Error`
+        - **Expected data:** An error message like "Internal Server Error."
+
+### Common HTTP Status Codes Overview:
+
+- **`200 OK`:** The request was successful, and the response body contains the result.
+- **`201 Created`:** The request was successful, and a new resource was created (e.g., new movie, cinema, user).
+- **`204 No Content`:** The request was successful, but there is no content to return (e.g., deletion successful).
+- **`400 Bad Request`:** The request was invalid due to incorrect or missing data.
+- **`403 Forbidden`:** The user is not authorized to perform this action.
+- **`404 Not Found`:** The requested resource (e.g., movie, user, cinema) was not found.
+- **`500 Internal Server Error`:** The server encountered an unexpected condition that prevented it from fulfilling the request.
+
 ## Error Handling
 
 ### 1. **Method Argument Validation Exceptions**
